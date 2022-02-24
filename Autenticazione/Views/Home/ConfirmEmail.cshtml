@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "Conferma email registrazione";
+}
+<h1>@ViewData["Title"]</h1>
+
+@if (ViewData["MsgKo"] != null)
+{
+    <p class="text-danger">@ViewData["MsgKo"].ToString()</p>
+}
+else
+{
+    <p>Grazie per esserti registrato. La tua email è stata confermata</p>
+}
