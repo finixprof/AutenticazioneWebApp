@@ -25,6 +25,10 @@ namespace Autenticazione
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            EmailHelper.HostSmtp = Configuration.GetValue<string>("HostSmtp");
+            EmailHelper.PortSmtp = Configuration.GetValue<int>("PortSmpt");
+            EmailHelper.Email = Configuration.GetValue<string>("Email");
+            EmailHelper.Password = Configuration.GetValue<string>("Password");
             DatabaseHelper.ConnectionString = Configuration.GetConnectionString("Autenticazione");
         }
 
