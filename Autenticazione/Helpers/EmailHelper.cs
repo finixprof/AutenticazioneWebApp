@@ -48,7 +48,7 @@ namespace Autenticazione.Helpers
             }
             catch (Exception ex)
             {
-                throw new Exception("Errore invio mail");
+                throw new Exception("Errore invio mail",ex);
             }
         }
     }
