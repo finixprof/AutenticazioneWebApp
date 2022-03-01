@@ -70,7 +70,17 @@ namespace Autenticazione.Helpers
 
         public static bool ExistUserWithEmail(string email)
         {
-            throw new NotImplementedException();
+            using (var db = new MySqlConnection(ConnectionString))
+            {
+                var sqlQuery = "SELECT * FROM utente " +
+                    " WHERE dataUltimaModifica IS NOT NULL and email=@email";
+
+                var utente = db.Query<Utente>(sqlQuery, new { email = email }).FirstOrDefault();
+                if (utente != null)
+                    return true;
+
+            }
+            return false;
         }
     }
 }

@@ -69,7 +69,7 @@ namespace Autenticazione.Controllers
             {
                 ViewData["MsgKo"] = "Accetta i termini della privacy";
             }
-            if (DatabaseHelper.ExistUserWithEmail(model.Email))
+            if (ViewData["MsgKo"] == null && DatabaseHelper.ExistUserWithEmail(model.Email))
             {
                 ViewData["MsgKo"] = "Esiste già un utente con questo indirizzo email";
             }
