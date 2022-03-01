@@ -70,6 +70,7 @@ namespace Autenticazione.Controllers
             if (ViewData["MsgKo"] != null)
                 return View(model);
 
+            model.Password = CryptoHelper.HashSHA256(model.Password);
             var utente = DatabaseHelper.SaveUtente(model);
             model.Id = utente.Id;
             var tokenInChiaro = $"{model.Id}_{model.Email}";
