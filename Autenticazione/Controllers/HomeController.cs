@@ -38,6 +38,8 @@ namespace Autenticazione.Controllers
 
         public IActionResult ConfirmEmail(string token)
         {
+            //8) confermo la mail e completo registrazione.
+            //Arrivo qui dal click sul link della mail inviata in fase di registrazione
             token = token.Replace(" ", "+"); //questo è un workaround
             var tokenInChiaro = HttpUtility.HtmlDecode(CryptoHelper.Decrypt(token));
             var tokenPieces = tokenInChiaro.Split("_");
@@ -57,6 +59,7 @@ namespace Autenticazione.Controllers
         [HttpPost]
         public IActionResult SignIn(SignInViewModel model)
         {
+            //1) controllo che i campi siano compilati correttamente
             if (!ModelState.IsValid)
             {
                 var msgKo = "Completa tutti i campi nella maniera corretta<br>";
@@ -69,21 +72,26 @@ namespace Autenticazione.Controllers
             {
                 ViewData["MsgKo"] = "Accetta i termini della privacy";
             }
+            //2 verifico che non esista l'utente
             if (ViewData["MsgKo"] == null && DatabaseHelper.ExistUserWithEmail(model.Email))
             {
                 ViewData["MsgKo"] = "Esiste già un utente con questo indirizzo email";
             }
+            //3) mando gli errori se ce ne sono
             if (ViewData["MsgKo"] != null)
                 return View(model);
-
+            //4) faccio l'hash sha 256 della password
             model.Password = CryptoHelper.HashSHA256(model.Password);
+            //5) salvo l'utente
             var utente = DatabaseHelper.SaveUtente(model);
             model.Id = utente.Id;
             var tokenInChiaro = $"{model.Id}_{model.Email}";
+            //6) creo i ltoken per la mail
             var token = HttpUtility.HtmlEncode(CryptoHelper.Encrypt(tokenInChiaro));
             var link = PathHelper.GetUrlToConfirmEmail(HttpContext.Request, token);
             try
             {
+                //7) invio la mail
                 EmailHelper.Send(utente, link);
             }
             catch (Exception ex)
