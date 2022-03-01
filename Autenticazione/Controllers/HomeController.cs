@@ -35,7 +35,7 @@ namespace Autenticazione.Controllers
             return View();
         }
 
-        public IActionResult ConfirmMail(string token)
+        public IActionResult ConfirmEmail(string token)
         {
             var tokenInChiaro = CryptoHelper.Decrypt(token);
             var tokenPieces = tokenInChiaro.Split("_");
@@ -45,7 +45,7 @@ namespace Autenticazione.Controllers
             {
                 DatabaseHelper.ConfirmEmail(id, email);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 ViewData["MsgKo"] = ex.Message;
             }
@@ -74,11 +74,15 @@ namespace Autenticazione.Controllers
             model.Id = utente.Id;
             var tokenInChiaro = $"{model.Id}_{model.Email}";
             var token = CryptoHelper.Encrypt(tokenInChiaro);
-            //string url = HttpContext.Request.Url.AbsoluteUri
-            //String strPathAndQuery = HttpContext.Current.Request.Url.PathAndQuery;
-            //String strUrl = HttpContext.Current.Request.Url.AbsoluteUri.Replace(strPathAndQuery, "/");
-            var link = $"";
-            var req = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host.Value;
+            var link = PathHelper.GetUrlToConfirmEmail(HttpContext.Request, token);
+            try
+            {
+                EmailHelper.Send(utente, link);
+            }
+            catch (Exception ex)
+            {
+                ViewData["MsgKo"] = ex.Message;
+            }
 
             return View();
         }
