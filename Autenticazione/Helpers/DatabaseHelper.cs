@@ -67,5 +67,10 @@ namespace Autenticazione.Helpers
 
             }
         }
+
+        public static bool ExistUserWithEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

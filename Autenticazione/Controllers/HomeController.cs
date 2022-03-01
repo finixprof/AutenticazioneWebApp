@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace Autenticazione.Controllers
 {
@@ -37,7 +38,8 @@ namespace Autenticazione.Controllers
 
         public IActionResult ConfirmEmail(string token)
         {
-            var tokenInChiaro = CryptoHelper.Decrypt(token);
+            token = token.Replace(" ", "+"); //questo è un workaround
+            var tokenInChiaro = HttpUtility.HtmlDecode(CryptoHelper.Decrypt(token));
             var tokenPieces = tokenInChiaro.Split("_");
             var id = tokenPieces[0];
             var email = tokenPieces[1];
@@ -67,6 +69,10 @@ namespace Autenticazione.Controllers
             {
                 ViewData["MsgKo"] = "Accetta i termini della privacy";
             }
+            if (DatabaseHelper.ExistUserWithEmail(model.Email))
+            {
+                ViewData["MsgKo"] = "Esiste già un utente con questo indirizzo email";
+            }
             if (ViewData["MsgKo"] != null)
                 return View(model);
 
@@ -74,7 +80,7 @@ namespace Autenticazione.Controllers
             var utente = DatabaseHelper.SaveUtente(model);
             model.Id = utente.Id;
             var tokenInChiaro = $"{model.Id}_{model.Email}";
-            var token = CryptoHelper.Encrypt(tokenInChiaro);
+            var token = HttpUtility.HtmlEncode(CryptoHelper.Encrypt(tokenInChiaro));
             var link = PathHelper.GetUrlToConfirmEmail(HttpContext.Request, token);
             try
             {
