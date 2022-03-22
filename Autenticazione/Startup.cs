@@ -1,7 +1,8 @@
 using Autenticazione.Helpers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,11 @@ namespace Autenticazione
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    //aggiungere url login per not authorized
+                }); 
             EmailHelper.HostSmtp = Configuration.GetValue<string>("HostSmtp");
             EmailHelper.PortSmtp = Configuration.GetValue<int>("PortSmpt");
             EmailHelper.Email = Configuration.GetValue<string>("Email");
@@ -50,6 +56,7 @@ namespace Autenticazione
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

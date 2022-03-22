@@ -1,12 +1,15 @@
 ﻿using Autenticazione.Helpers;
 using Autenticazione.Models;
 using Autenticazione.Models.Views;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -37,12 +40,12 @@ namespace Autenticazione.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 ViewData["MsgKo"] = "Username e password devono essere compilati";
-                return View(model);
+                return  View(model); //await Task.Run(() => View(model));
             }
             //faccio l'hash sha 256 della password
             model.Password = CryptoHelper.HashSHA256(model.Password);
@@ -58,12 +61,28 @@ namespace Autenticazione.Controllers
             //Se non ci sono errori
             //1)metto in sessione l'utente
 
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, utente.Email)
+                //,    new Claim("LastChanged", {Your Value})
+            };
+
+            var claimsIdentity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+        new ClaimsPrincipal(claimsIdentity));
+
+
+
             //2)vado verso l'area riservata
-            return RedirectToAction("Index","AreaRiservata");
+            return RedirectToAction("Index", "AreaRiservata");
         }
 
 
-            public IActionResult SignIn()
+        public IActionResult SignIn()
         {
             return View();
         }
