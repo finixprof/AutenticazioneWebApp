@@ -52,6 +52,19 @@ namespace Autenticazione.Helpers
             throw new Exception("Errore inserimento non completato");
         }
 
+        public static Utente Login(string username, string password)
+        {
+            using (var db = new MySqlConnection(ConnectionString))
+            {
+                var sqlQuery = "SELECT * FROM utente " +
+                    " WHERE dataUltimaModifica IS NOT NULL and " +
+                    " (email=@username OR username=@username) and password=@password";
+
+                var utente = db.Query<Utente>(sqlQuery, new { username = username, password = password }).FirstOrDefault();
+                return utente;
+            }
+        }
+
         public static void ConfirmEmail(string id, string email)
         {
             var data = DateTime.Now;

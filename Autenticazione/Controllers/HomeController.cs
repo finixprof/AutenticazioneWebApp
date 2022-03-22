@@ -31,7 +31,39 @@ namespace Autenticazione.Controllers
             return View();
         }
 
-        public IActionResult SignIn()
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewData["MsgKo"] = "Username e password devono essere compilati";
+                return View(model);
+            }
+            //faccio l'hash sha 256 della password
+            model.Password = CryptoHelper.HashSHA256(model.Password);
+
+            //cerco l'utente nel database
+            var utente = DatabaseHelper.Login(model.Username, model.Password);
+            if (utente == null)
+            {
+                ViewData["MsgKo"] = "Username e/o password non corretti";
+                return View(model);
+            }
+
+            //Se non ci sono errori
+            //1)metto in sessione l'utente
+
+            //2)vado verso l'area riservata
+            return RedirectToAction("Index","AreaRiservata");
+        }
+
+
+            public IActionResult SignIn()
         {
             return View();
         }
@@ -86,7 +118,7 @@ namespace Autenticazione.Controllers
             var utente = DatabaseHelper.SaveUtente(model);
             model.Id = utente.Id;
             var tokenInChiaro = $"{model.Id}_{model.Email}";
-            //6) creo i ltoken per la mail
+            //6) creo il token per la mail
             var token = HttpUtility.HtmlEncode(CryptoHelper.Encrypt(tokenInChiaro));
             var link = PathHelper.GetUrlToConfirmEmail(HttpContext.Request, token);
             try
@@ -102,10 +134,6 @@ namespace Autenticazione.Controllers
             return View();
         }
 
-        public IActionResult Login()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
