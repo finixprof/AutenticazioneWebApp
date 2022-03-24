@@ -3,6 +3,7 @@ using Autenticazione.Models;
 using Autenticazione.Models.Views;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -12,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
+using Autenticazione.Helpers.Extensions;
 
 namespace Autenticazione.Controllers
 {
@@ -75,9 +77,10 @@ namespace Autenticazione.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
         new ClaimsPrincipal(claimsIdentity));
 
-
-
-            //2)vado verso l'area riservata
+            //mettiamo l'utente in sessione
+            HttpContext.Session.SetString("username",utente.Username);
+            HttpContext.Session.SetObject("utenteLoggato", utente);
+            //2)vado verso l'area riservata ma prima controllo il ReturnUrl
             return RedirectToAction("Index", "AreaRiservata");
         }
 

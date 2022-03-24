@@ -29,8 +29,11 @@ namespace Autenticazione
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    //aggiungere url login per not authorized
-                }); 
+                    options.LoginPath = "/Home/Login"; //aggiungere url login per not authorized
+                });
+            services.AddSession(options => {
+                //options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
             EmailHelper.HostSmtp = Configuration.GetValue<string>("HostSmtp");
             EmailHelper.PortSmtp = Configuration.GetValue<int>("PortSmpt");
             EmailHelper.Email = Configuration.GetValue<string>("Email");
@@ -55,7 +58,7 @@ namespace Autenticazione
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
 

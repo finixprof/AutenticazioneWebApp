@@ -29,8 +29,16 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="SignIn">Registrazione</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="AreaRiservata" asp-action="Logout">Logout</a>
+                            @if (User.Identity.Name == null)
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                            }
+                            else
+                            {
+                                <span> @User.Identity.Name</span>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AreaRiservata" asp-action="Logout">Logout</a>
+
+                            }
                         </li>
                     </ul>
                 </div>
