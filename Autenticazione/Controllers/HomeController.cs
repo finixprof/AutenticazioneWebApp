@@ -78,7 +78,7 @@ namespace Autenticazione.Controllers
         new ClaimsPrincipal(claimsIdentity));
 
             //mettiamo l'utente in sessione
-            HttpContext.Session.SetString("username",utente.Username);
+            //HttpContext.Session.SetString("username",utente.Username);
             HttpContext.Session.SetObject("utenteLoggato", utente);
             //2)vado verso l'area riservata ma prima controllo il ReturnUrl
             return RedirectToAction("Index", "AreaRiservata");
