@@ -35,7 +35,9 @@
                             }
                             else
                             {
-                                <span> @User.Identity.Name</span>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AreaRiservata" asp-action="Profile">
+                                    @User.Identity.Name
+                                </a>
                                 <a class="nav-link text-dark" asp-area="" asp-controller="AreaRiservata" asp-action="Logout">Logout</a>
 
                             }

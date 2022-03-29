@@ -17,8 +17,10 @@ namespace Autenticazione.Models.Entities
 
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } 
         public int PersonaId { get; set; }
+        public Persona Persona { get; set; }
+
 
         [Required]
         public bool IsPrivacy { get; set; }

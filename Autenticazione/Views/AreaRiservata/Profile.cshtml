@@ -1,0 +1,94 @@
+﻿@model Autenticazione.Models.Views.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Profilo utente</h1>
+
+<hr />
+
+<form asp-action="Profile">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" readonly="readonly" />
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" readonly="readonly" />
+            </div>
+            <input type="hidden" asp-for="PersonaId" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Persona.Nome" class="control-label"></label>
+                <input asp-for="Persona.Nome" class="form-control" />
+                <span asp-validation-for="Persona.Nome" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Persona.Cognome" class="control-label"></label>
+                <input asp-for="Persona.Cognome" class="form-control" />
+                <span asp-validation-for="Persona.Cognome" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Persona.DataNascita" class="control-label"></label>
+                <input type="date" asp-for="Persona.DataNascita" class="form-control" value="1" />
+                <span asp-validation-for="Persona.DataNascita" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>Maschio</label>
+                <input type="radio" asp-for="Persona.Sesso" class="form-control" value="0" />
+                <label>Femmina</label>
+                <input type="radio" asp-for="Persona.Sesso" class="form-control" value="1" />
+                <span asp-validation-for="Persona.Sesso" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="Persona.ImgProfilo" class="control-label"></label>
+                <input type="file" asp-for="Persona.ImgProfilo" class="form-control" />
+                <span asp-validation-for="Persona.ImgProfilo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                @if (Model.Persona != null  && Model.Persona.ImgProfilo != null)
+                {
+                    <img src="~/uploads/persone/@Model.Id/@Model.Persona.ImgProfilo" width="75" />
+                }
+             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+</form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

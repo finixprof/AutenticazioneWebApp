@@ -1,5 +1,6 @@
 ﻿using Autenticazione.Helpers.Extensions;
 using Autenticazione.Models.Entities;
+using Autenticazione.Models.Views;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -21,14 +22,15 @@ namespace Autenticazione.Controllers
             if (utente == null)
                 return RedirectToAction("login", "home"); //non servirà praticamente mai perchè l'utente non loggato viene bloccato da authorize
             if (utente.PersonaId == 0)
-                return RedirectToAction("profilo");
+                return RedirectToAction("profile");
             return View();
         }
 
         private Utente GetLoggedUser()
         {
             var utente = HttpContext.Session.GetObject<Utente>("utenteLoggato");
-            ViewData["Username"] = utente.Username;
+            if (utente != null)
+                ViewData["Username"] = utente.Username;
             return utente;
         }
 
@@ -39,14 +41,16 @@ namespace Autenticazione.Controllers
             return RedirectToAction("index", "home");
         }
 
-        public IActionResult Profilo()
+        public IActionResult Profile()
         {
             Utente utente = GetLoggedUser();
-            return View();
+            if (utente==null)
+                return RedirectToAction("login", "home");
+            return View(new ProfileViewModel(utente));
         }
 
         [HttpPost]
-        public IActionResult Profilo(int id)
+        public IActionResult Profile(Utente utente)
         {
             return View();
         }
