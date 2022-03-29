@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Autenticazione.Models.Entities
 {
-    public class Utente
+    public class Utente : BaseEntity
     {
-        public int Id { get; set; }
+
         [Required]
         public string Username { get; set; }
         [Required]
@@ -22,12 +22,6 @@ namespace Autenticazione.Models.Entities
 
         [Required]
         public bool IsPrivacy { get; set; }
-
-        public DateTime DataCreazione { get; set; }
-
-        public DateTime DataUltimaModifica { get; set; }
-
-
 
     }
 }
