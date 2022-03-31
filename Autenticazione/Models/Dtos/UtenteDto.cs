@@ -10,5 +10,8 @@ namespace Autenticazione.Models.Dtos
     public class UtenteDto : Utente
     {
         public IFormFile FileImgProfilo { get; set; }
+
+        public new string  Password { get; set; }
+
     }
 }
