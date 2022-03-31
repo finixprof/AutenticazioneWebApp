@@ -30,7 +30,10 @@ namespace Autenticazione.Helpers
         {
             using (var db = new MySqlConnection(ConnectionString))
             {
-                var sqlQuery = "UPDATE nazione SET nome=@nome  WHERE id = @id";
+                var sqlQuery = "UPDATE utente " +
+                    "SET personaid=@personaid, " +
+                    "dataultimamodifica=@dataultimamodifica  " +
+                    "WHERE id = @id";
 
                 var affectedRows = db.Execute(sqlQuery, model);
                 if (affectedRows == 1)
@@ -95,5 +98,57 @@ namespace Autenticazione.Helpers
             }
             return false;
         }
+
+        public static Utente SaveUtentePersona(Utente utente, bool isInsert = false)
+        {
+            if (isInsert)
+            {
+                utente.Persona = InsertPersona(utente.Persona);
+                utente.PersonaId = utente.Persona.Id;
+                utente.DataUltimaModifica = utente.Persona.DataUltimaModifica;
+                UpdateUtente(utente);
+            }
+            else
+            {
+                UpdatePersona(utente.Persona);
+            }
+            return utente;
+        }
+
+        private static Persona UpdatePersona(Persona persona)
+        {
+            persona.DataUltimaModifica = DateTime.Now;
+            using (var db = new MySqlConnection(ConnectionString))
+            {
+                var sqlQuery = "UPDATE persona " +
+                    "SET nome=@nome, " +
+                    "cognome=@cognome  " +
+                    "sesso=@sesso  " +
+                    "dataNascita=@dataNascita  " +
+                    "imgProfilo=@imgProfilo  " +
+                    "dataultimamodifica=@dataultimamodifica  " +
+                    "WHERE id = @id";
+
+                var affectedRows = db.Execute(sqlQuery, persona);
+                if (affectedRows == 1)
+                    return persona;
+            }
+            throw new Exception("Errore aggiornamento non completato");
+        }
+
+        private static Persona InsertPersona(Persona persona)
+        {
+            persona.DataUltimaModifica = DateTime.Now;
+            using (var db = new MySqlConnection(ConnectionString))
+            {
+                var sqlQuery = "INSERT INTO persona (nome,cognome,dataNascita,sesso,imgProfilo,dataUltimaModifica) VALUES (@nome,@cognome,@dataNascita,@sesso,@imgProfilo,@dataUltimaModifica); " +
+                        "SELECT LAST_INSERT_ID()";
+                persona.Id = db.Query<int>(sqlQuery, persona).FirstOrDefault();
+                if (persona.Id > 0)
+                    return persona;
+            }
+            throw new Exception("Errore inserimento non completato");
+        }
+
     }
 }

@@ -12,5 +12,19 @@ namespace Autenticazione.Helpers
         {
             return $"{request.Scheme}://{request.Host.Value}/home/confirmEmail?token={token}";
         }
+
+
+        public static string WebRootPath { get; set; }
+
+        public static string GetPathUploads()
+        {
+            return $"{WebRootPath}\\wwwroot\\uploads";
+        }
+
+
+        public static string GetPathPersona(int id)
+        {
+            return $"{WebRootPath}\\wwwroot\\uploads\\persone\\{id}";
+        }
     }
 }

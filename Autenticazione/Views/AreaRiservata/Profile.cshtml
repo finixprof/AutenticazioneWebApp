@@ -64,7 +64,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="Persona.ImgProfilo" class="control-label"></label>
-                <input type="file" asp-for="Persona.ImgProfilo" class="form-control" />
+                <input type="file" asp-for="FileImgProfilo" class="form-control" />
                 <span asp-validation-for="Persona.ImgProfilo" class="text-danger"></span>
             </div>
         </div>
@@ -72,7 +72,7 @@
             <div class="form-group">
                 @if (Model.Persona != null  && Model.Persona.ImgProfilo != null)
                 {
-                    <img src="~/uploads/persone/@Model.Id/@Model.Persona.ImgProfilo" width="75" />
+                    <img src="@(Autenticazione.Helpers.PathHelper.GetPathPersona(Model.Id)+'/'+Model.Persona.ImgProfilo)" width="75" />
                 }
              </div>
         </div>
@@ -81,12 +81,19 @@
         <div class="col-md-4">
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+                @if (ViewData["MsgOk"] != null)
+                {
+                    <span class="text-success"> @Html.Raw(ViewData["MsgOk"].ToString())</span>
+                }
+                @if (ViewData["MsgKo"] != null)
+                {
+                    <span class="text-danger"> @Html.Raw(ViewData["MsgKo"].ToString())</span>
+                }
             </div>
         </div>
     </div>
 </form>
-    </div>
-</div>
+
 
 
 @section Scripts {

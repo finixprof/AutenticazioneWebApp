@@ -12,6 +12,7 @@ namespace Autenticazione.Models.Entities
         public string Nome { get; set; }
         [Required]
         public string Cognome { get; set; }
+        [Display(Name = "Immagine profilo")]
         public string ImgProfilo { get; set; }
         public bool Sesso { get; set; }
         public DateTime DataNascita { get; set; }

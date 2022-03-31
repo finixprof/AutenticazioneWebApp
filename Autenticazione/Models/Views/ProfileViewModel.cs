@@ -1,4 +1,5 @@
 ﻿using Autenticazione.Models.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,7 +10,7 @@ namespace Autenticazione.Models.Views
 {
     public class ProfileViewModel : Utente
     {
-        
+        public IFormFile FileImgProfilo { get; set; }
 
         public ProfileViewModel(Utente utente)
         {
